@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Cotizaciones</title>
+    <!--Font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--Custom CSS-->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="app-logo" class="app-logo"></div>
+        <nav class="main-navbar">
+            <ul class="nav-list">
+                <li><a href="#">Cotizaciones</a></li>
+                <li><a href="#">Actividades</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form action="" id="new-product-form" novalidate>
+            <div class="form-field">
+                <label for="new-product-name">Nuevo Producto</label>
+                <input type="text" name="new-product-name" id="new-product-name"/>
+                <small></small>
+            </div>
+            <button type="submit" id="btn-add-product">Agregar</button>
+        </form>
+        <form action="" id="new-quote-form" novalidate>
+            <input type="number" name="selected-product-id" id="selected-product-id" readonly/>
+            <div class="form-field">
+                <label for="selected-product-name">Producto</label>
+                <input type="text" name="selected-product-name" id="selected-product-name" readonly/>
+                <small>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</small>
+            </div>
+            <div class="form-field">
+                <label for="new-product-supplier">Proveedor</label>
+                <input type="text" name="new-product-supplier" id="new-product-supplier">
+                <small>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</small>
+            </div>
+            <div class="form-field">
+                <label for="new-product-price">Precio</label>
+                <input type="number" name="new-product-price" id="new-product-price">
+                <small>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</small>
+            </div>
+            <div class="form-field">
+                <p>Impuesto IVA</p>
+                <div class="radio-frame">
+                    <input type="radio" name="iva" id="iva-21" value="0.21" checked/>
+                    <label for="iva-21">21%</label>
+                    <input type="radio" name="iva" id="iva-105" value="0.105"/>
+                    <label for="iva-105">10.5%</label>
+                    <input type="radio" name="iva" id="iva-0" value="0" />
+                    <label for="iva-0">0%</label>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="new-product-brand">Marca</label>
+                <input type="text" name="new-product-brand" id="new-product-brand"/>
+                <small>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</small>
+            </div>
+            <div class="form-field">
+                <label for="new-product-obs">Observación</label>
+                <input type="text" name="new-product-obs" id="new-product-obs"/>
+                <small>Lorem ipsum dolor sit amet consectetur adipisicing elit.</small>
+            </div>
+            <button type="submit">Agregar</button>
+        </form>
+
+        <!--En esta tabla se muestran los productos-->
+        <div class="product-frame">
+            <input type="text" id="product-search-input" name="product-search-input" placeholder="Búsqueda por palabra clave"/>
+            <div class="table" id="product-table"></div>
+        </div>
+
+        <!--En esta tabla se muestran las cotizaciones-->
+        <div class="table" id="product-quotes-detail-table"></div>
+    </main>
+    <script src="./index.js"></script>
+</body>
+</html>
