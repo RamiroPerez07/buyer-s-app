@@ -1,17 +1,4 @@
-const newProductForm = document.getElementById("new-product-form")
-const newQuoteForm = document.getElementById("new-quote-form")
-const newProductNameInput = document.getElementById("new-product-name")
-const selectedProductIdInput = document.getElementById("selected-product-id")
-const selectedProductNameInput = document.getElementById("selected-product-name")
-const newProductSupplierInput = document.getElementById("new-product-supplier")
-const newProductPriceInput = document.getElementById("new-product-price")
-const newProductIvaInput = document.getElementsByName("iva")
-const newProductBrandInput = document.getElementById("new-product-brand")
-const newProductObsInput = document.getElementById("new-product-obs")
-//tablas
-const productTable = document.getElementById("product-table")
-const productDetailTable = document.getElementById("product-quotes-detail-table")
-//busqueda por palabra clave
+
 
 function getItemsFromLocalStorage(key){
     objectList = JSON.parse(localStorage.getItem(key)) || []
@@ -76,6 +63,7 @@ function renderPriceQuotes(quoteList){
 
 function addProduct(event, productList){
     event.preventDefault();
+    if(!isValidProductForm()) return
     productList = getItemsFromLocalStorage("products")
     productList = [...productList, //traigo todos los productos de la lista
         { //agrego el nuevo producto
@@ -122,6 +110,7 @@ function deleteAllQuotes(){
 
 function addQuote(event){
     event.preventDefault();
+    if(!isValidQuoteForm()) return
     quoteList = getItemsFromLocalStorage("quotes");
     quoteList = [...quoteList, //traigo todas las cotizaciones de la lista
         { //agrego la nueva cotización
@@ -138,7 +127,7 @@ function addQuote(event){
 
     saveItemsInLocalStorage(quoteList,"quotes");
 
-    quoteList = quoteList.filter(objQuote => objQuote.idProduct == selectedProduct.idProduct)
+    quoteList = quoteList.filter(objQuote => objQuote.idProduct == selectedProductIdInput.value)
     renderPriceQuotes(quoteList);
     clearInputs();
 }
@@ -167,8 +156,8 @@ function getCurrentDate(){
 const init = () =>{
     const productList = getItemsFromLocalStorage("products");  //obtengo todos los productos del almacenamiento local
     renderProducts(productList);
-    const quoteList = getItemsFromLocalStorage("quotes");
-    renderPriceQuotes(quoteList);
+    // const quoteList = getItemsFromLocalStorage("quotes");  //al principio no muestro la lista porque no hay nada seleccionado
+    // renderPriceQuotes(quoteList);
     newProductForm.addEventListener("submit", addProduct);
     productTable.addEventListener("click", selectProduct);
     newQuoteForm.addEventListener("submit", addQuote);

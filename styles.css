@@ -218,7 +218,11 @@ main{
     grid-column: 2/3;
     font-size: var(--fs-xsmall1);
     font-weight: var(--fw-light0);
-    color : var(--color-error);
+    height: 12px;
+}
+
+.error{
+    color: var(--color-error)
 }
 
 .form-field input[type="text"],
