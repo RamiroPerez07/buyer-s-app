@@ -11,7 +11,7 @@ const newProductObsInput = document.getElementById("new-product-obs")
 //tablas
 const productTable = document.getElementById("product-table")
 const productDetailTable = document.getElementById("product-quotes-detail-table")
-
+//busqueda por palabra clave
 
 function getItemsFromLocalStorage(key){
     objectList = JSON.parse(localStorage.getItem(key)) || []
@@ -45,10 +45,11 @@ function renderProducts(productList){
 
 function renderPriceQuote(priceQuote,index){
     return `
-    <div class="quote-row>
+    <div class="quote-row">
         <div>${index+1}</div>
         <div>${priceQuote.supplier}</div>
         <div>${priceQuote.brand}</div>
+        <div>${priceQuote.obs}</div>
         <div>${priceQuote.price}</div>
         <div>${priceQuote.iva}</div>
         <div>${priceQuote.p_final}</div>
@@ -63,6 +64,7 @@ function renderPriceQuotes(quoteList){
             <div>Fila</div>
             <div>Proveedor</div>
             <div>Marca</div>
+            <div>Obs</div>
             <div>Precio</div>
             <div>IVA</div>
             <div>Final</div>
@@ -85,31 +87,68 @@ function addProduct(event, productList){
     newProductNameInput.value = ""; //reseteo el input
 }
 
+function deleteCurrentSelection(){
+    currentSelectedRow = document.getElementsByClassName("selected-row")
+    currentSelectedRow = [...currentSelectedRow]
+    if (currentSelectedRow.length) currentSelectedRow[0].classList.remove("selected-row")
+}
+
 function selectProduct(event){
+    deleteCurrentSelection()
     const tableRow = event.target.parentElement
     const clasesDeTablaProducto = tableRow.classList;
-    if (clasesDeTablaProducto.contains("header-row")) return
-    else if (!clasesDeTablaProducto.contains("row")) return
+    if (clasesDeTablaProducto.contains("header-row") || !clasesDeTablaProducto.contains("row")){
+        selectedProductIdInput.value = "";
+        selectedProductNameInput.value = "";
+        deleteCurrentSelection();
+        return
+    }
+    clasesDeTablaProducto.add("selected-row")//pinto la row seleccionada
     productList = getItemsFromLocalStorage("products")
     selectedProduct = productList.find(objProduct => objProduct.idProduct == tableRow.dataset.id)
     selectedProductIdInput.value = selectedProduct.idProduct
     selectedProductNameInput.value = selectedProduct.name
+
+    //muestro en la tabla de cotizaciones, todas las relacionadas a este producto
+    deleteAllQuotes(); //elimino las cotizaciones actuales
+    quoteList = getItemsFromLocalStorage("quotes"); // me traigo la lista
+    quoteList = quoteList.filter(objQuote => objQuote.idProduct == selectedProduct.idProduct) //filtro por las seleccionadas
+    renderPriceQuotes(quoteList);
+}
+
+function deleteAllQuotes(){
+    productDetailTable.innerHTML = ""
 }
 
 function addQuote(event){
     event.preventDefault();
-    quoteList = getItemsFromLocalStorage("products")
+    quoteList = getItemsFromLocalStorage("quotes");
     quoteList = [...quoteList, //traigo todas las cotizaciones de la lista
         { //agrego la nueva cotización
             idQuote: quoteList.length + 1,
+            idProduct: selectedProductIdInput.value,
             supplier: newProductSupplierInput.value.toString().toUpperCase(),
             brand: newProductBrandInput.value.toString().toUpperCase(),
             price: parseFloat(newProductPriceInput.value),
-            iva: getIvaValue(newProductIvaInput),
-            p_final: this.price * (1 + this.iva),
+            iva: getIvaValue(newProductIvaInput)*100+"%",
+            p_final: parseFloat(newProductPriceInput.value)*(1+getIvaValue(newProductIvaInput)),
             obs: newProductObsInput.value.toString().toUpperCase(),
             date: getCurrentDate(),
         }]
+
+    saveItemsInLocalStorage(quoteList,"quotes");
+
+    quoteList = quoteList.filter(objQuote => objQuote.idProduct == selectedProduct.idProduct)
+    renderPriceQuotes(quoteList);
+    clearInputs();
+}
+
+function clearInputs(){
+    newProductIvaInput[0].checked = true;
+    newProductPriceInput.value = "";
+    newProductBrandInput.value = "";
+    newProductObsInput.value = "";
+    newProductSupplierInput.value = "";
 }
 
 function getIvaValue(inputs){
@@ -122,7 +161,7 @@ function getCurrentDate(){
     d = date.getDate();
     m = date.getMonth() +1;
     y = date.getFullYear();
-    return `${d}/${m}/${y}`
+    return `${d.toString().padStart(2,"0")}/${m.toString().padStart(2,"0")}/${y}`
 }
 
 const init = () =>{
