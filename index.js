@@ -129,9 +129,9 @@ function addQuote(event){
             idProduct: selectedProductIdInput.value,
             supplier: newProductSupplierInput.value.toString().toUpperCase(),
             brand: newProductBrandInput.value.toString().toUpperCase(),
-            price: parseFloat(newProductPriceInput.value),
+            price: Math.round(parseFloat(newProductPriceInput.value)*100)/100,
             iva: getIvaValue(newProductIvaInput)*100+"%",
-            p_final: parseFloat(newProductPriceInput.value)*(1+getIvaValue(newProductIvaInput)),
+            p_final: Math.round(parseFloat(newProductPriceInput.value)*(1+getIvaValue(newProductIvaInput))*100)/100,
             obs: newProductObsInput.value.toString().toUpperCase(),
             date: getCurrentDate(),
         }]
