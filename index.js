@@ -235,7 +235,7 @@ function hideMenu(){
 function setMainHeight(){
     const mainHeight = parseFloat(getComputedStyle(main).height);
     const windowHeight = parseFloat(window.innerHeight);
-    if (mainHeight < windowHeight){
+    if (mainHeight < windowHeight -50 -30){
         main.style.height = (windowHeight - 50 - 30)+"px" //45px altura header y 40px altura footer
     }else{
         main.style.height = "auto"
