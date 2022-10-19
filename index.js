@@ -98,7 +98,10 @@ function deleteCurrentSelection(){
 function selectProduct(event){
     deleteCurrentSelection()
     const tableField = event.target
-    if (tableField.classList.contains("delete-product")) deleteProduct(tableField)
+    if (tableField.classList.contains("delete-product")){
+        deleteProduct(tableField);
+        return;
+    } 
     const tableRow = event.target.parentElement
     const rowClassTableProduct = tableRow.classList;
     if (rowClassTableProduct.contains("header-row") || !rowClassTableProduct.contains("row")){
