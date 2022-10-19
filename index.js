@@ -191,7 +191,8 @@ function deleteProduct(tableField){
     deleteAllQuotes();
     deleteAllProducts();
     renderProducts(newProductList);
-    
+    selectedProductIdInput.value = ""
+    selectedProductNameInput.value = ""
 }
 
 function deleteCurrentQuoteSelection(){
