@@ -13,6 +13,11 @@ const newProductObsInput = document.getElementById("new-product-obs")
 const productTable = document.getElementById("product-table")
 const productDetailTable = document.getElementById("product-quotes-detail-table")
 //busqueda por palabra clave
+const searchProductInput = document.getElementById("product-search-input")
+//botones de eliminacion de producto
+const deleteProductBtns= document.getElementsByClassName("delete-product")
+const deleteQuoteBtns = document.getElementsByClassName("delete-quote")
+
 
 // form validation
 

@@ -15,6 +15,7 @@ function renderProduct(product,index){
         <div>${index+1}</div>
         <div>${product.idProduct}</div>
         <div>${product.name}</div>
+        <div class="delete-product">🧹</div>
     </div>
     `
 }
@@ -25,6 +26,7 @@ function renderProducts(productList){
             <div>Fila</div>
             <div>ID</div>
             <div>Producto</div>
+            <div></div>
         </div>
     `;
     productTable.innerHTML = productTableHeader + productList.map((objProduct,index) => renderProduct(objProduct,index)).join("")
@@ -41,6 +43,7 @@ function renderPriceQuote(priceQuote,index){
         <div>${priceQuote.iva}</div>
         <div>${priceQuote.p_final}</div>
         <div>${priceQuote.date}</div>
+        <div class="delete-quote" data-q=${priceQuote.idQuote} data-p=${priceQuote.idProduct}>🧹</div>
     </div>
     `
 }
@@ -56,18 +59,29 @@ function renderPriceQuotes(quoteList){
             <div>IVA</div>
             <div>Final</div>
             <div>Fecha</div>
+            <div></div>
         </div>
     `;
     productDetailTable.innerHTML = priceQuoteTableHeader + quoteList.map((objQuote,index) => renderPriceQuote(objQuote,index)).join("")
 }
 
-function addProduct(event, productList){
+function verifyIfProductAlreadyExist(product, productList){
+    return productList.some(objProduct => objProduct.name.toString()===product)
+}
+
+function addProduct(event){
     event.preventDefault();
     if(!isValidProductForm()) return
-    productList = getItemsFromLocalStorage("products")
+    const productName = newProductNameInput.value.toString().toUpperCase()
+    let productList = getItemsFromLocalStorage("products")
+    if(verifyIfProductAlreadyExist(productName, productList)){
+        showError(newProductNameInput, "* El producto ya existe")
+        return
+    } 
+    let maxId = Math.max(...productList.map(objProduct => objProduct.idProduct))
     productList = [...productList, //traigo todos los productos de la lista
         { //agrego el nuevo producto
-            idProduct: productList.length + 1,
+            idProduct: maxId==-Infinity ? 1: maxId+1,
             name: newProductNameInput.value.toString().toUpperCase(),
         }]
     saveItemsInLocalStorage(productList, "products");
@@ -83,15 +97,17 @@ function deleteCurrentSelection(){
 
 function selectProduct(event){
     deleteCurrentSelection()
+    const tableField = event.target
+    if (tableField.classList.contains("delete-product")) deleteProduct(tableField)
     const tableRow = event.target.parentElement
-    const clasesDeTablaProducto = tableRow.classList;
-    if (clasesDeTablaProducto.contains("header-row") || !clasesDeTablaProducto.contains("row")){
+    const rowClassTableProduct = tableRow.classList;
+    if (rowClassTableProduct.contains("header-row") || !rowClassTableProduct.contains("row")){
         selectedProductIdInput.value = "";
         selectedProductNameInput.value = "";
         deleteCurrentSelection();
         return
     }
-    clasesDeTablaProducto.add("selected-row")//pinto la row seleccionada
+    rowClassTableProduct.add("selected-row")//pinto la row seleccionada
     productList = getItemsFromLocalStorage("products")
     selectedProduct = productList.find(objProduct => objProduct.idProduct == tableRow.dataset.id)
     selectedProductIdInput.value = selectedProduct.idProduct
@@ -112,10 +128,11 @@ function addQuote(event){
     event.preventDefault();
     if(!isValidQuoteForm()) return
     quoteList = getItemsFromLocalStorage("quotes");
+    let maxIdQuote = Math.max(...quoteList.map(objQuote => objQuote.idQuote))
     quoteList = [...quoteList, //traigo todas las cotizaciones de la lista
         { //agrego la nueva cotización
-            idQuote: quoteList.length + 1,
-            idProduct: selectedProductIdInput.value,
+            idQuote: maxIdQuote==-Infinity ? 1: maxIdQuote+1,
+            idProduct: parseInt(selectedProductIdInput.value),
             supplier: newProductSupplierInput.value.toString().toUpperCase(),
             brand: newProductBrandInput.value.toString().toUpperCase(),
             price: Math.round(parseFloat(newProductPriceInput.value)*100)/100,
@@ -153,14 +170,57 @@ function getCurrentDate(){
     return `${d.toString().padStart(2,"0")}/${m.toString().padStart(2,"0")}/${y}`
 }
 
+function deleteAllProducts(){
+    productTable.innerHTML = ""
+}
+
+function searchProductByKeyword(keyword){
+    //deleteAllProducts(); //reseteo la tabla para arrojar los nuevos resultados
+    const productList = getItemsFromLocalStorage("products")
+    const resulltOfSearch = productList.filter(objProduct => objProduct.name.toString().includes(keyword.toString().toUpperCase()))
+    renderProducts(resulltOfSearch);
+}
+
+function deleteProduct(tableField){
+    const productList = getItemsFromLocalStorage("products");
+    const quoteList = getItemsFromLocalStorage("quotes");
+    let newProductList = productList.filter(objProduct => objProduct.idProduct != tableField.parentElement.dataset.id) //no solo borro los productos sino tambien las cotizaciones
+    let newQuoteList = quoteList.filter(objQuote => objQuote.idProduct != tableField.parentElement.dataset.id)
+    saveItemsInLocalStorage(newProductList,"products");
+    saveItemsInLocalStorage(newQuoteList, "quotes");
+    deleteAllQuotes();
+    deleteAllProducts();
+    renderProducts(newProductList);
+    
+}
+
+function selectQuote(event){
+    if (event.target.classList.contains("delete-quote")) deleteQuote(event)
+}
+
+function deleteQuote(event){
+    const quoteList = getItemsFromLocalStorage("quotes");
+    let newQuoteList = quoteList.filter(objQuote => {
+        console.log("producto "+objQuote.idProduct + "coti " + objQuote.idQuote )
+        console.log(objQuote.idProduct != event.target.dataset.p && objQuote.idQuote != event.target.dataset.q)
+        console.log(objQuote.idProduct != event.target.dataset.p);
+        console.log(event.target.dataset.q)
+        return objQuote.idProduct != event.target.dataset.p && objQuote.idQuote != event.target.dataset.q;
+    })
+    saveItemsInLocalStorage(newQuoteList, "quotes");
+}
+
 const init = () =>{
     const productList = getItemsFromLocalStorage("products");  //obtengo todos los productos del almacenamiento local
     renderProducts(productList);
     // const quoteList = getItemsFromLocalStorage("quotes");  //al principio no muestro la lista porque no hay nada seleccionado
     // renderPriceQuotes(quoteList);
     newProductForm.addEventListener("submit", addProduct);
-    productTable.addEventListener("click", selectProduct);
+    productTable.addEventListener("click", selectProduct );
+    productDetailTable.addEventListener("click", selectQuote)
     newQuoteForm.addEventListener("submit", addQuote);
+    searchProductInput.addEventListener("input", function(){searchProductByKeyword(searchProductInput.value)})
+    //funciones de eliminación
 }
 
 init()
