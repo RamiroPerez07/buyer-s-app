@@ -18,6 +18,12 @@ const searchProductInput = document.getElementById("product-search-input")
 const deleteProductBtns= document.getElementsByClassName("delete-product")
 const deleteQuoteBtns = document.getElementsByClassName("delete-quote")
 
+//burguer-btn
+const burguerBtn = document.getElementById("burguer-btn")
+const menu = document.getElementById("main-navbar")
+
+//main
+const main = document.getElementById("main")
 
 // form validation
 

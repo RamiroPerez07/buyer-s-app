@@ -219,6 +219,26 @@ function deleteQuote(event){
     renderPriceQuotes(newQuoteList.filter(objQuote => objQuote.idProduct == event.target.dataset.p));
 }
 
+function showMenu(){
+    menu.classList.toggle("show-burguer-btn")
+    console.log(menu.classList)
+}
+
+function hideMenu(){
+    menu.classList.remove("show-burguer-btn")
+}
+
+function setMainHeight(){
+    console.log("ingreso")
+    const mainHeight = parseFloat(getComputedStyle(main).height);
+    const windowHeight = parseFloat(window.innerHeight);
+    if (mainHeight < windowHeight){
+        console.log("me ejecuto");
+        console.log(windowHeight)
+        main.style.height = (windowHeight - 50 - 30)+"px" //45px altura header y 40px altura footer
+    }
+}
+
 const init = () =>{
     const productList = getItemsFromLocalStorage("products");  //obtengo todos los productos del almacenamiento local
     renderProducts(productList);
@@ -229,6 +249,10 @@ const init = () =>{
     productDetailTable.addEventListener("click", selectQuote)
     newQuoteForm.addEventListener("submit", addQuote);
     searchProductInput.addEventListener("input", function(){searchProductByKeyword(searchProductInput.value)})
+    burguerBtn.addEventListener("click", showMenu)
+    window.addEventListener("scroll", hideMenu)
+    menu.addEventListener("click", hideMenu)
+    window.addEventListener("load", setMainHeight)
 }
 
 init()

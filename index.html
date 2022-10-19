@@ -13,14 +13,15 @@
 <body>
     <header>
         <div id="app-logo" class="app-logo"></div>
-        <nav class="main-navbar">
+        <nav class="main-navbar" id="main-navbar">
             <ul class="nav-list">
                 <li><a href="#">Cotizaciones</a></li>
                 <li><a href="#">Actividades</a></li>
             </ul>
         </nav>
+        <i class="fa-solid fa-bars" id="burguer-btn"></i>
     </header>
-    <main>
+    <main id="main">
         <form action="" id="new-product-form" novalidate>
             <div class="form-field">
                 <label for="new-product-name">Nuevo Producto</label>
@@ -79,6 +80,9 @@
         <!--En esta tabla se muestran las cotizaciones-->
         <div class="table" id="product-quotes-detail-table"></div>
     </main>
+    <footer>
+        <a target="_blank" href="https://github.com/RamiroPerez07">Ramiro Perez <i class="fa-brands fa-github"></i></i></a>
+    </footer>
     <script src="./validations.js"></script>
     <script src="./index.js"></script>
 </body>
