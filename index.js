@@ -259,4 +259,8 @@ const init = () =>{
     window.addEventListener("load", setMainHeight)
 }
 
+window.onresize = function(){ //
+    setMainHeight()
+}
+
 init()
