@@ -11,6 +11,7 @@
     --color3: #2b2e33;
     --color4: #206dd8;
     --color5: #5696f0;
+    --hover-row: #206dd856;
     --color-error: #ff3c00;
     --fs-xsmall0: 0.6rem;
     --fs-xsmall1: 0.7rem;
@@ -235,6 +236,7 @@ main{
     width: 100%;
     display: grid;
     grid-template-columns: 10% 1fr;
+    gap: 3px;
 }
 
 /* Tabla de productos */
@@ -255,9 +257,10 @@ main{
 
 .product-frame{
     display: grid;
-    width: 100%;
+    width: 70%;
     grid-template-columns: 1fr;
     gap: 5px;
+    /* justify-self: center; */
 }
 
 .product-frame input[type="text"]{
@@ -281,25 +284,30 @@ main{
 
 .quote-row:hover,
 .row:hover{
-    background-color: var(--color4);
+    background-color: var(--hover-row);
     cursor: pointer;
 }
 
 .selected-row{
-    background-color: var(--color4);
-    font-weight: var(--fw-bold1);
+    background-color: var(--color4) !important;
+    font-weight: var(--fw-bold1) !important;
+}
+
+.selected-quote-row{
+    background-color: var(--color4) !important;
+    font-weight: var(--fw-bold1) !important;
 }
 
 .quote-row div,
 .row div{
     width: 100%;
     height: 100%;
-    padding-left: 5px;
     display: grid;
     align-items: center;
     color: var(--color1);
     font-size: var(--fs-small0);
     font-weight: var(--fw-light0);
+    overflow: hidden;
 }
 
 .quote-row{
@@ -325,13 +333,13 @@ main{
     color: var(--color1);
     align-self: center;
     justify-self: start;
-    padding-left: 5px;
     font-size: var(--fs-small0);
     font-weight: var(--fw-light0);
     width: 100%;
     height: 100%;
     display: grid;
     align-items: center;
+    overflow: hidden;
 }
 
 .header-quote-row{
@@ -342,6 +350,14 @@ main{
     width: 100%;
     position: sticky;
     top: 0;
+}
+
+.header-quote-row ,
+.quote-row,
+.header-row ,
+.row {
+    padding: 0px 5px;
+    gap: 2px;
 }
 
 #selected-product-id{
@@ -378,10 +394,73 @@ main{
     display: none;
 }
 
-.table::-webkit-scrollbar-button:horizontal,
+/* .table::-webkit-scrollbar-button:horizontal,
 .table::-webkit-scrollbar-track:horizontal,
 .table::-webkit-scrollbar-button:horizontal,
 .table::-webkit-scrollbar-corner:horizontal,
 .table::-webkit-scrollbar-thumb:horizontal{
     display: none;
+} */
+
+
+
+
+
+
+
+/* Media queries */
+
+@media (max-width: 1024px){
+    html{
+        font-size: 14px;
+    }
+
+    main{
+        grid-template-columns: 1fr;
+        padding: 2% 3%;
+        justify-items: center;
+    }
+
+    #new-product-form{
+        grid-column: 1/2;
+        grid-row: 1/2;
+    }
+
+    .product-frame{
+        grid-column: 1/2;
+        grid-row: 2/3;
+        width: 100%;
+        gap: 10px;
+    }
+
+    #new-quote-form{
+        grid-column: 1/2;
+        grid-row: 3/4;
+    }
+
+    #product-quotes-detail-table{
+        grid-column: 1/2;
+        grid-row: 4/5;
+    }
+
+    button{
+        padding: 10px 12px;
+    }
+
+
+    .header-quote-row ,
+    .quote-row{
+        min-width: 700px;
+    }
+
+    .header-row ,
+    .row{
+        grid-template-columns: 30px 30px 1fr 20px;
+    }
+
+    .radio-frame{
+        gap: 8px;
+    }
+
 }
+

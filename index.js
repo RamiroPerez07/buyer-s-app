@@ -194,20 +194,29 @@ function deleteProduct(tableField){
     
 }
 
+function deleteCurrentQuoteSelection(){
+    currentSelectedRow = document.getElementsByClassName("selected-quote-row")
+    currentSelectedRow = [...currentSelectedRow]
+    if (currentSelectedRow.length) currentSelectedRow[0].classList.remove("selected-quote-row")
+}
+
 function selectQuote(event){
-    if (event.target.classList.contains("delete-quote")) deleteQuote(event)
+    deleteCurrentQuoteSelection();
+    if (event.target.classList.contains("delete-quote")){
+        deleteQuote(event)
+    }else if (event.target.parentElement.classList.contains("quote-row")){
+        event.target.parentElement.classList.add("selected-quote-row");
+    }
 }
 
 function deleteQuote(event){
     const quoteList = getItemsFromLocalStorage("quotes");
     let newQuoteList = quoteList.filter(objQuote => {
-        console.log("producto "+objQuote.idProduct + "coti " + objQuote.idQuote )
-        console.log(objQuote.idProduct != event.target.dataset.p && objQuote.idQuote != event.target.dataset.q)
-        console.log(objQuote.idProduct != event.target.dataset.p);
-        console.log(event.target.dataset.q)
-        return objQuote.idProduct != event.target.dataset.p && objQuote.idQuote != event.target.dataset.q;
+        return objQuote.idQuote != event.target.dataset.q;
     })
     saveItemsInLocalStorage(newQuoteList, "quotes");
+    deleteAllQuotes();
+    renderPriceQuotes(newQuoteList.filter(objQuote => objQuote.idProduct == event.target.dataset.p));
 }
 
 const init = () =>{
@@ -220,7 +229,6 @@ const init = () =>{
     productDetailTable.addEventListener("click", selectQuote)
     newQuoteForm.addEventListener("submit", addQuote);
     searchProductInput.addEventListener("input", function(){searchProductByKeyword(searchProductInput.value)})
-    //funciones de eliminación
 }
 
 init()
